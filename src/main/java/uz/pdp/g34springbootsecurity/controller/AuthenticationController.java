@@ -1,5 +1,6 @@
 package uz.pdp.g34springbootsecurity.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import uz.pdp.g34springbootsecurity.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication APIs", description = "Processes authentication based actions through apis")
 public class AuthenticationController {
 
     private final UserServiceImpl userServiceImpl;

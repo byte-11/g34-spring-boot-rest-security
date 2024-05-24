@@ -1,5 +1,6 @@
 package uz.pdp.g34springbootsecurity.config;
 
+import io.jsonwebtoken.security.Jwks;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,13 @@ import uz.pdp.g34springbootsecurity.filter.JwtAuthenticationFilter;
 
 @Configuration
 public class SecurityConfiguration {
+
+    private static final String[] OPEN_URIs = {
+            "/auth/**",
+            "/h2/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -26,7 +34,7 @@ public class SecurityConfiguration {
 
         http.
                 authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(OPEN_URIs).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

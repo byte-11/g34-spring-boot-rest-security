@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.util.Date;
+import java.util.StringJoiner;
 import javax.crypto.SecretKey;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +31,15 @@ public class JwtProvider {
     }
 
     public String generateToken(UserEntity user) {
+        StringJoiner joiner = new StringJoiner(",");
+        user.getRoles().forEach(role -> joiner.add(role.getName()));
         return Jwts
                 .builder()
                 .subject(user.getEmail())
                 .issuedAt(new Date())
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
+                .claim("roles", joiner.toString())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
                 .compact();

@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmail(String email);
 
-    @Query("SELECT u FROM UserEntity u")
+    @Query("SELECT u FROM User u")
     List<UserProjection> findAllUsers();
 
 }

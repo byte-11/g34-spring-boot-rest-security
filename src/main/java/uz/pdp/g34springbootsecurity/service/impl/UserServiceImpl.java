@@ -1,10 +1,10 @@
 package uz.pdp.g34springbootsecurity.service.impl;
 
 import java.util.List;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.pdp.g34springbootsecurity.domain.UserEntity;
-import uz.pdp.g34springbootsecurity.dto.user.UserDto;
 import uz.pdp.g34springbootsecurity.dto.user.UserLoginDto;
 import uz.pdp.g34springbootsecurity.dto.user.UserRegistrationDto;
 import uz.pdp.g34springbootsecurity.dto.web.JwtResponse;
@@ -48,6 +48,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(
                        () -> new UserNotFoundException("User not found by email: " + dto.email())
                 );
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())){
+            throw new BadCredentialsException("Bad credentials");
+        }
         return new JwtResponse(jwtProvider.generateToken(user), jwtProvider.getExpiration());
     }
 

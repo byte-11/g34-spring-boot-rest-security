@@ -1,7 +1,6 @@
 package uz.pdp.g34springbootsecurity.service;
 
 import java.util.List;
-import uz.pdp.g34springbootsecurity.dto.user.UserDto;
 import uz.pdp.g34springbootsecurity.dto.user.UserLoginDto;
 import uz.pdp.g34springbootsecurity.dto.user.UserRegistrationDto;
 import uz.pdp.g34springbootsecurity.dto.web.JwtResponse;
