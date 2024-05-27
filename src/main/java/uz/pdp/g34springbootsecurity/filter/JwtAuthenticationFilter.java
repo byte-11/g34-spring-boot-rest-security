@@ -7,10 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -52,11 +54,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final Claims claims = jwtProvider.parseClaims(token);
         final String username = claims.get("username", String.class);
-        String[] roles = claims.get("roles", String.class).split(",");
-        List<SimpleGrantedAuthority> authorities = Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList();
+
         SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(username, null, authorities)
+                new UsernamePasswordAuthenticationToken(username, null, extractAuthorities(claims))
         );
         filterChain.doFilter(request, response);
+    }
+
+    private Collection<? extends GrantedAuthority> extractAuthorities(final Claims claims) {
+        final String[] roles = claims.get("roles", String.class).split(",");
+
+        if (roles.length > 0 && !roles[0].isEmpty()) {
+            return Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList();
+        }
+        return Collections.emptyList();
     }
 }

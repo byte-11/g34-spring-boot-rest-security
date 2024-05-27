@@ -44,11 +44,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JwtResponse login(UserLoginDto dto) {
-        final UserEntity user = userRepository.findByEmail(dto.email())
+        final UserEntity user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(
-                       () -> new UserNotFoundException("User not found by email: " + dto.email())
+                       () -> new UserNotFoundException("User not found by email: " + dto.getEmail())
                 );
-        if (!passwordEncoder.matches(dto.password(), user.getPassword())){
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())){
             throw new BadCredentialsException("Bad credentials");
         }
         return new JwtResponse(jwtProvider.generateToken(user), jwtProvider.getExpiration());

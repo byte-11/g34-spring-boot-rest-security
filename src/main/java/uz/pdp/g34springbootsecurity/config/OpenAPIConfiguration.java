@@ -1,9 +1,12 @@
 package uz.pdp.g34springbootsecurity.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -88,6 +91,24 @@ public class OpenAPIConfiguration {
                                 new Server().url("http://localhost:8081").description("DEVELOPMENT"),
                                 new Server().url("http://localhost:8082").description("PRODUCTION")
                         )
+                )
+                .addSecurityItem(
+                        new SecurityRequirement()
+                                .addList("Bearer Authentication")
+                )
+                .components(
+                        new Components()
+                                .addSecuritySchemes("Bearer Authentication", bearerSecurityScheme())
                 );
+    }
+
+    @Bean
+    public SecurityScheme bearerSecurityScheme() {
+        return new SecurityScheme()
+                .name("Bearer Authentication")
+                .description("Bearer authentication for sending requests within header")
+                .type(SecurityScheme.Type.HTTP)
+                .bearerFormat("JWT")
+                .scheme("bearer");
     }
 }

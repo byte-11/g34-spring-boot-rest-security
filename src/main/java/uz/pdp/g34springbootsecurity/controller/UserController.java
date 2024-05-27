@@ -1,5 +1,6 @@
 package uz.pdp.g34springbootsecurity.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    @Operation(description = "Getting list of users")
     public ResponseEntity<List<UserProjection>> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
